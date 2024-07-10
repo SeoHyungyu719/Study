@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="employeeMapper">
+	<!-- <select id="login" parameterType="employee.model.vo.Employee" resultType="employee.model.vo.Employee"> parameter 전달하는 속성의 값 -->
+	<select id="login" parameterType="employee.model.vo.Employee" resultMap="empResultSet"> <!-- parameter 전달하는 속성의 값 -->
+		select * 
+		from v_selectemp 
+		where empno = #{empNo} 
+		  	  and pwd = #{pwd}
+		  	  and status = 'Y'
+		  	  
+	</select>
+	<!-- id는 select의 이름을 지칭, 여러개 넣으면 길어짐 그래서 아이디  -->
+	<resultMap type="employee.model.vo.Employee" id="empResultSet"><!-- 결과로 들어온 resultSet값을 매핑해준다 -->
+	<!-- 기본키(primary) -->
+	<!-- column = result set 컬럼명 / property = setter명 -->
+		<id column="EMPNO" property="empNo"/>
+		<!-- 일반 컬럼 -->
+		<result column="PWD" property="pwd"/>
+		<result column="ENAME" property="empName"/>
+		<result column="JOB" property="job"/>
+		<result column="MGR_NO" property="mgrNo"/>
+		<result column="MGR" property="mgr"/>
+		<result column="HIREDATE" property="hireDate"/>
+		<result column="SAL" property="sal"/>
+		<result column="COMM" property="comm"/>
+		<result column="DEPTNO" property="deptNo"/>
+		<result column="DNAME" property="dept"/>
+		<result column="IS_ADMIN" property="isAdmin"/>
+		<result column="STATUS" property="status"/>
+		
+		<!-- 일치되어있지 않은 부분만 맞춰줘도 똑같이 출력된다. 하지만 명시적으로 보여주기위해 모두 집어넣어야한다.
+		굳이 그렇필요있느냐로 나뉨 -->
+	</resultMap>
+	
+	<select id="selectAll" resultMap="empResultSet"> <!-- 보낼 데이터가 없을 때는 parameterType 설정 필요x, String, int에 떄라 내장 mybatis 함수에 따른 문장 작성 -->
+		select * from v_selectemp
+	</select>
+	
+	<select id="checkEmpNo" parameterType="_int" resultType="_int"> <!-- resultType은 resultSet이 나오는 select구문일 때만 이용한다. -->
+		select count(*)
+		from emp
+		where empno = #{inputId}		
+	</select>
+	
+	<insert id="insertEmployee" parameterType="employee.model.vo.Employee">
+		  insert into emp values(#{empNo}, #{empName}, #{job}, #{mgrNo} , SYSDATE, #{sal}, #{comm}, #{deptNo}, default, #{isAdmin}, default)
+	</insert>
+	<!-- mybatis에서 null로 들어오는건 받지 몬함 그럴떈 null을 받아들일수 있게 하는 설정이 존재-->
+	
+	<update id="updateEmployee" parameterType = "employee.model.vo.Employee">
+		update emp set pwd=#{pwd}, ename=#{empName}, job=#{job}, sal=#{sal}, comm=#{comm}, deptno=#{deptNo} where empno=#{empNo}
+	</update>
+	
+	<update id="updateState" parameterType="map">
+		update emp set ${col} = #{value} where empno = #{id}
+	</update>
+</mapper>

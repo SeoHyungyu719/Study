@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+<!--  The content of element type "configuration" must match 
+ 	"(properties?,settings?,typeAliases?,typeHandlers?,objectFactory?,objectWrapperFactory?,reflectorFactory?,plugins?,environments?,databaseIdProvider?,mappers?)". -->
+ 	
+ 	<settings>
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+ 	
+	<!-- DB에 연결할 설정에 대한 정보 -->
+	<environments default="development">
+	<!-- default: 연결 설정을 여러개 생성하여 아이디로 구분하고 기본으로 연결할 설정 정보 기입 -->
+		<!-- Database 연결할 설정 정보 -->
+		<environment id="development">
+			<!-- 트랜잭션을 누가 관리할 것인가에 대한 설정
+				JDBC       : 직접 트랜잭션 처리(수동 commit)
+				MANAGED    : 컨테이너가 트랜잭션의 생명주기 관리(자동 commit)
+			-->
+			<transactionManager type="JDBC"/>
+			<!-- 실제 DB접속에 대한 정보 
+				POOLED		: 커넥션 객체를 미리 만들어놓고 사용자의 요청이 있을 떄마다 pool에서 꺼내 쓰는 방법(재사용) 
+				UNPOOLED	: DB 요청이 올 때마다 실시간으로 커넥션 객체 생성 open후 close
+			-->
+			<dataSource type="POOLED">
+				<property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+				<property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl"/>
+				<property name="username" value="SCOTT"/>
+				<property name="password" value="SCOTT"/>
+				<!-- 데이터를 DB에서 받아오는 부분 -->
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<mappers>
+		<mapper resource = "mappers/employee-mapper.xml"/>
+		<mapper resource = "mappers/board-mapper.xml"/>
+	</mappers>
+	
+	
+</configuration>
